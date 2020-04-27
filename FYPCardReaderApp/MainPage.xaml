@@ -8,9 +8,8 @@
 
     <StackLayout>
         <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+        <Button Text="Find Missing Persons" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Clicked="DisplayMissingPersons"/>
+        <Button Text="Reset Emergency Status for Persons" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Clicked="ResetEmergencyStatus"/>
     </StackLayout>
 
 </ContentPage>

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using FYPCardReaderApp.Models;
 
 namespace FYPCardReaderApp.Models
 {
@@ -29,6 +30,25 @@ namespace FYPCardReaderApp.Models
             var response = await client.PostAsync(client.BaseAddress + "/accessTimes/setAccessTime", content);
             //response.EnsureSuccessStatusCode();
             string responseString = await response.Content.ReadAsStringAsync();
+        }
+
+        public void GetResetStatus()
+        {
+            //StringContent content = new StringContent(JsonConvert.SerializeObject(data));
+            //content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = client.GetAsync(client.BaseAddress + "/accessTimes/clearAllSafety");
+            //response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<Person[]> GetMissingUsers()
+        {
+
+            var response = await client.GetAsync(client.BaseAddress + "/accessTimes/findUnsafeUsers").ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            string responseString = await response.Content.ReadAsStringAsync();
+            Person[] result = JsonConvert.DeserializeObject<Person[]>(responseString);
+            return result;
         }
     }
 }

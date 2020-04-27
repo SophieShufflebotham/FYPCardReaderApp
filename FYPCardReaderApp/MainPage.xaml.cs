@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using FYPCardReaderApp.Interfaces;
+using FYPCardReaderApp.Models;
+using FYPCardReaderApp.Views;
 
 namespace FYPCardReaderApp
 {
@@ -24,6 +26,21 @@ namespace FYPCardReaderApp
             ICardReaderService service = DependencyService.Get<ICardReaderService>();
             service.StartListening();
             await Application.Current.MainPage.DisplayAlert("NFC", "NFC Started", "OK");
+        }
+
+        private async void DisplayMissingPersons(object sender, EventArgs e)
+        {
+            Console.WriteLine("dun eet?");
+            MissingUsersView userListPage = new MissingUsersView();
+            NavigationPage navPage = new NavigationPage(userListPage);
+
+            await Application.Current.MainPage.Navigation.PushModalAsync(navPage);
+        }
+
+        private void ResetEmergencyStatus(object sender, EventArgs e)
+        {
+            RestService service = new RestService();
+            service.GetResetStatus();
         }
     }
 }
