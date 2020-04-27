@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
+
+namespace FYPCardReaderApp.Models
+{
+    public class RestService
+    {
+        private HttpClient client;
+
+        private const string BaseUrl = "https://fypazureapp.azurewebsites.net/";
+
+        public RestService()
+        {
+            client = new HttpClient();
+            client.BaseAddress = new Uri(BaseUrl);
+            client.MaxResponseContentBufferSize = 256000;
+        }
+
+        public async void PostTimeRequest<TResult>(object data)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(data));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await client.PostAsync(client.BaseAddress + "/accessTimes/setAccessTime", content);
+            //response.EnsureSuccessStatusCode();
+            string responseString = await response.Content.ReadAsStringAsync();
+        }
+    }
+}
