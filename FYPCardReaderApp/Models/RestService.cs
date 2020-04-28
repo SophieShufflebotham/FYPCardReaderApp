@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using FYPCardReaderApp.Models;
+using FYPCardReaderApp.Responses;
 
 namespace FYPCardReaderApp.Models
 {
@@ -48,6 +49,19 @@ namespace FYPCardReaderApp.Models
             response.EnsureSuccessStatusCode();
             string responseString = await response.Content.ReadAsStringAsync();
             Person[] result = JsonConvert.DeserializeObject<Person[]>(responseString);
+            return result;
+        }
+
+        public async Task<LocationsResponse[]> PostUserPermissions(object data)
+        {
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(data));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await client.PostAsync(client.BaseAddress + "/users/userPermissions", content);
+            //response.EnsureSuccessStatusCode();
+            string responseString = await response.Content.ReadAsStringAsync();
+            LocationsResponse[] result = JsonConvert.DeserializeObject<LocationsResponse[]>(responseString);
             return result;
         }
     }

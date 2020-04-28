@@ -72,9 +72,6 @@ namespace FYPCardReaderApp.Droid.Services
                         string payloadString = System.Text.Encoding.UTF8.GetString(payload);
                         Console.WriteLine($"Recieved Payload: {payloadString}");
                         OnPayloadReceived(payloadString);
-                        Device.BeginInvokeOnMainThread(async () => {
-                            await Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Success", $"Recieved Payload {payloadString}", "OK");
-                        });
                     }
                 }
                 catch (TagLostException e)
@@ -141,7 +138,7 @@ namespace FYPCardReaderApp.Droid.Services
             return data;
         }
 
-        private async void OnPayloadReceived(string payload)
+        private void OnPayloadReceived(string payload)
         {
             if(payload != "0" && payload != "")
             {
@@ -149,7 +146,42 @@ namespace FYPCardReaderApp.Droid.Services
                 rep.userId = payload;
                 rep.locationId = App.LOCATION_ID;
                 RestService service = new RestService();
+                VerifyAccess(payload);
+            }
+        }
+
+        private async void VerifyAccess(string userId)
+        {
+            PermissionResponse rep = new PermissionResponse();
+            rep.UserId = userId;
+
+            RestService service = new RestService();
+            LocationsResponse[] locations = await service.PostUserPermissions(rep);
+            bool permissionFound = false;
+
+            for(int i = 0; i < locations.Length; i++)
+            {
+                Console.WriteLine($"Location: {locations[i]}");
+                if(locations[i].Location == App.LOCATION_ID.ToString())
+                {
+                    permissionFound = true;
+                    break;
+                }
+            }
+
+            if(permissionFound)
+            {
+                Device.BeginInvokeOnMainThread(async () => {
+                    await Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Success", "Successfully scanned", "OK");
+                });
+
                 service.PostTimeRequest<SetAccessTimeResponse>(rep);
+            }
+            else
+            {
+                Device.BeginInvokeOnMainThread(async () => {
+                    await Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Permission Violation", "You are not permitted entry", "OK");
+                });
             }
         }
     }
