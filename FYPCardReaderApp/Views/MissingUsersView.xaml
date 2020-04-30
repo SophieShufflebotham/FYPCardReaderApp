@@ -7,7 +7,7 @@
              x:Class="FYPCardReaderApp.Views.MissingUsersView">
     <ContentPage.Content>
         <StackLayout>
-            <ListView ItemsSource = "{Binding PersonList} " HasUnevenRows="True">
+            <ListView ItemsSource = "{Binding PersonList} " HasUnevenRows="True" ItemSelected="ListItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

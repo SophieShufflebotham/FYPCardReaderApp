@@ -64,5 +64,15 @@ namespace FYPCardReaderApp.Models
             LocationsResponse[] result = JsonConvert.DeserializeObject<LocationsResponse[]>(responseString);
             return result;
         }
+
+        public async void PostUserIsSafe(object data)
+        {
+            StringContent content = new StringContent(JsonConvert.SerializeObject(data));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await client.PostAsync(client.BaseAddress + "/accessTimes/markAsSafe", content);
+            response.EnsureSuccessStatusCode();
+            string responseString = await response.Content.ReadAsStringAsync();
+        }
     }
 }

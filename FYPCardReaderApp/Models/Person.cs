@@ -9,5 +9,6 @@ namespace FYPCardReaderApp.Models
         public string Forename { get; set; }
         public string Surname { get; set; }
         public string LocationName { get; set; }
+        public string Id { get; set; }
     }
 }
