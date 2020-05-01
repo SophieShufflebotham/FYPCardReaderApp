@@ -175,7 +175,10 @@ namespace FYPCardReaderApp.Droid.Services
                     await Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Success", "Successfully scanned", "OK");
                 });
 
-                service.PostTimeRequest<SetAccessTimeResponse>(rep);
+                SetAccessTimeResponse accessRep = new SetAccessTimeResponse();
+                accessRep.userId = userId;
+                accessRep.locationId = App.LOCATION_ID;
+                service.PostTimeRequest<SetAccessTimeResponse>(accessRep);
             }
             else
             {
