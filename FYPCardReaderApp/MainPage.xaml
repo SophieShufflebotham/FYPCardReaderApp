@@ -7,9 +7,10 @@
              x:Class="FYPCardReaderApp.MainPage">
 
     <StackLayout>
-        <!-- Place new controls here -->
+        <Label x:Name="LocationNameLabel" FontSize="Large" FontAttributes="Bold"></Label>
         <Button Text="Find Missing Persons" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Clicked="DisplayMissingPersons"/>
         <Button Text="Reset Emergency Status for Persons" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Clicked="ResetEmergencyStatus"/>
+        <Button Text="Change Location" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Clicked="ChangeLocation"/>
     </StackLayout>
 
 </ContentPage>

@@ -74,5 +74,14 @@ namespace FYPCardReaderApp.Models
             response.EnsureSuccessStatusCode();
             string responseString = await response.Content.ReadAsStringAsync();
         }
+
+        public async Task<Location[]> GetAllLocations()
+        {
+            var response = await client.GetAsync(client.BaseAddress + "/accessTimes/allLocations").ConfigureAwait(false); ;
+            //response.EnsureSuccessStatusCode();
+            string responseString = await response.Content.ReadAsStringAsync();
+            Location[] result = JsonConvert.DeserializeObject<Location[]>(responseString);
+            return result;
+        }
     }
 }

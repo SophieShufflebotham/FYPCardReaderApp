@@ -9,6 +9,5 @@ namespace FYPCardReaderApp.Responses
     {
         [JsonProperty("locationId")]
         public string Location { get; set; }
-        
     }
 }

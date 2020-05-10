@@ -25,12 +25,11 @@ namespace FYPCardReaderApp
         {
             ICardReaderService service = DependencyService.Get<ICardReaderService>();
             service.StartListening();
-            await Application.Current.MainPage.DisplayAlert("NFC", "NFC Started", "OK");
+            LocationNameLabel.Text = $"Location ID: {App.LOCATION_NAME}";
         }
 
         private async void DisplayMissingPersons(object sender, EventArgs e)
         {
-            Console.WriteLine("dun eet?");
             MissingUsersView userListPage = new MissingUsersView();
             NavigationPage navPage = new NavigationPage(userListPage);
 
@@ -41,6 +40,14 @@ namespace FYPCardReaderApp
         {
             RestService service = new RestService();
             service.GetResetStatus();
+        }
+
+        private async void ChangeLocation(object sender, EventArgs e)
+        {
+            ChangeLocationView changeLocationPage = new ChangeLocationView();
+            NavigationPage navPage = new NavigationPage(changeLocationPage);
+
+            await Application.Current.MainPage.Navigation.PushModalAsync(navPage);
         }
     }
 }
