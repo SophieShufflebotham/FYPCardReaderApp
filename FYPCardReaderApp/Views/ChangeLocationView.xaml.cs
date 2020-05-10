@@ -36,8 +36,12 @@ namespace FYPCardReaderApp.Views
                 }
             }
 
-            LocationListView.SelectedItem = LocationList[index];
-            PreviousSelectionIndex = index;
+            if(App.LOCATION_ID != 0)
+            {
+                LocationListView.SelectedItem = LocationList[index];
+                PreviousSelectionIndex = index;
+            }
+
             BindingContext = this;
         }
 
@@ -54,9 +58,8 @@ namespace FYPCardReaderApp.Views
         {
 
             Location selectedLocation = (Location)LocationListView.SelectedItem;
-            //Location selectedLocation = LocationList[index];
 
-            if(selectedLocation != LocationList[PreviousSelectionIndex])
+            if (selectedLocation != LocationList[PreviousSelectionIndex] || App.LOCATION_ID == 0)
             {
                 var result = await DisplayAlert("Alert", $"Set Location #{selectedLocation.LocationId} - {selectedLocation.LocationName} as this device's location?", "Yes", "No");
 
@@ -69,7 +72,6 @@ namespace FYPCardReaderApp.Views
                     App.LOCATION_ID = int.Parse(selectedLocation.LocationId);
                     App.LOCATION_NAME = selectedLocation.LocationName;
                 }
-
             }
         }
     }

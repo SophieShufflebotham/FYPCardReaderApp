@@ -25,7 +25,14 @@ namespace FYPCardReaderApp
         {
             ICardReaderService service = DependencyService.Get<ICardReaderService>();
             service.StartListening();
-            LocationNameLabel.Text = $"Location ID: {App.LOCATION_NAME}";
+
+            if(App.LOCATION_ID == 0)
+            {
+                await DisplayAlert("Alert", "A location must first be configured", "OK");
+                ChangeLocation(null, null);
+            }
+
+            LocationNameLabel.Text = $"{App.LOCATION_NAME}";
         }
 
         private async void DisplayMissingPersons(object sender, EventArgs e)

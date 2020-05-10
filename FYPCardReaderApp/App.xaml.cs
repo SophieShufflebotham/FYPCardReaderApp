@@ -6,8 +6,8 @@ namespace FYPCardReaderApp
 {
     public partial class App : Application
     {
-        public static int LOCATION_ID = 1; //PLACEHOLDER
-        public static string LOCATION_NAME = "Entryway"; //PLACEHOLDER
+        public static int LOCATION_ID = 0; //PLACEHOLDER
+        public static string LOCATION_NAME = ""; //PLACEHOLDER
         public App()
         {
             InitializeComponent();
