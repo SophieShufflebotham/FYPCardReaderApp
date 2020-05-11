@@ -32,7 +32,7 @@ namespace FYPCardReaderApp
                 ChangeLocation(null, null);
             }
 
-            LocationNameLabel.Text = $"{App.LOCATION_NAME}";
+            LocationNameLabel.Text = $"This location is: {App.LOCATION_NAME}";
         }
 
         private async void DisplayMissingPersons(object sender, EventArgs e)

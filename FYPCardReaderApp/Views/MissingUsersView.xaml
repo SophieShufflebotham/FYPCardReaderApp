@@ -7,6 +7,8 @@
              x:Class="FYPCardReaderApp.Views.MissingUsersView">
     <ContentPage.Content>
         <StackLayout>
+            <Label VerticalOptions="Center" Text="Missing Users" FontSize="Title"></Label>
+            <Label VerticalOptions="Center" Text="Please find a list of users below that have clocked in but not clocked out, and their last known location. Please tap a user to mark them as safe and remove them from this list" FontSize="Subtitle"></Label>
             <ListView ItemsSource = "{Binding PersonList} " HasUnevenRows="True" ItemSelected="ListItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>

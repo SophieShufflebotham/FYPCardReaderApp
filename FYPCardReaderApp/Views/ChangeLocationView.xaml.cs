@@ -71,6 +71,7 @@ namespace FYPCardReaderApp.Views
                 {
                     App.LOCATION_ID = int.Parse(selectedLocation.LocationId);
                     App.LOCATION_NAME = selectedLocation.LocationName;
+                    await Navigation.PopModalAsync();
                 }
             }
         }
