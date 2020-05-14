@@ -22,16 +22,16 @@ namespace FYPCardReaderApp.Droid.Services
 {
     class CardReaderService : Java.Lang.Object, NfcAdapter.IReaderCallback, ICardReaderService
     {
-        private static readonly string TAG = "AccessCardReader";
+        private static readonly string TAG = "AccessCardReader"; //String for logging
 
-        // AID for our loyalty card service.
+        // AID for the access card service - the HCE process needs to match this for a successful read
         private static readonly string ACCESS_CARD_AID = "FF69696969";
         // ISO-DEP command HEADER for selecting an AID.
         // Format: [Class | Instruction | Parameter 1 | Parameter 2]
         private static readonly string SELECT_APDU_HEADER = "00A40400";
         // "OK" status word sent in response to SELECT AID command (0x9000)
         private static readonly byte[] SELECT_OK_SW = { (byte)0x90, (byte)0x00 };
-
+         
         public NfcReaderFlags READER_FLAGS = NfcReaderFlags.NfcA | NfcReaderFlags.SkipNdefCheck;
         public void OnTagDiscovered(Tag tag)
         {
@@ -46,35 +46,35 @@ namespace FYPCardReaderApp.Droid.Services
             {
                 Console.WriteLine("[CODE] IsoDep Found");
                 isoDep.Connect();
-                byte[] command = BuildSelectApdu(ACCESS_CARD_AID);
+                byte[] command = BuildSelectApdu(ACCESS_CARD_AID); //Once we find a tag, trancieve the command
                 try
                 {
                     byte[] result = isoDep.Transceive(command);
 
-                    // If the AID is successfully found, 0x9000 is returned from the device as the status word (last 2
+                    // If the matching AID is successfully found, 0x9000 is returned from the device as the status word (last 2
                     // bytes of the result) (0x9000 is the OK Status Word - this is returned if the phone is authorised and the scan was successful). Everything before the status word is
-                    // optional payload, which this project uses to store the userID
+                    // payload, in this case will be the user ID - this means result will be dynamic
                     int resultLength = result.Length;
-                    byte[] statusWord = { result[resultLength - 2], result[resultLength - 1] };
-                    byte[] payload = new byte[resultLength - 2];
-                    Array.Copy(result, payload, resultLength - 2);
+                    byte[] statusWord = { result[resultLength - 2], result[resultLength - 1] }; //Grab last two bytes for the status word
+                    byte[] payload = new byte[resultLength - 2]; //Initialise empty array payload
+                    Array.Copy(result, payload, resultLength - 2); //We know the lengths, so copy from those indexes into a new array
                     bool arrayEquals = SELECT_OK_SW.Length == statusWord.Length;
 
                     for (int i = 0; i < SELECT_OK_SW.Length && i < statusWord.Length && arrayEquals; i++)
                     {
-                        arrayEquals = (SELECT_OK_SW[i] == statusWord[i]);
+                        arrayEquals = (SELECT_OK_SW[i] == statusWord[i]); //Compare byte by byte, ISO-DEP communcation is in bytes - we're looking for 0x90, 0x00
                         if (!arrayEquals)
                             break;
                     }
-                    if (arrayEquals)
+                    if (arrayEquals) //Only if the status word is OK, unauthenticated devices will not respond with the "OK" status
                     {
-                        // The remote NFC device will respond with the userId as a payload
+                        // The NFC device will respond with the userId as a payload
                         string payloadString = System.Text.Encoding.UTF8.GetString(payload);
                         Console.WriteLine($"Recieved Payload: {payloadString}");
                         OnPayloadReceived(payloadString);
                     }
                 }
-                catch (TagLostException e)
+                catch (TagLostException e) //If something happens or the tag moves away, this is thrown. Close communication and inform user that an error occurred
                 {
                     isoDep.Close();
                     Console.WriteLine("[CODE] Caught tag loss error");
@@ -87,6 +87,7 @@ namespace FYPCardReaderApp.Droid.Services
 
         }
 
+        //Start NFC reader
         public void StartListening()
         {
             Activity activity = CrossCurrentActivity.Current.Activity;
@@ -150,6 +151,7 @@ namespace FYPCardReaderApp.Droid.Services
             }
         }
 
+        //Verify if user is permitted access before granting and writing an access time entry
         private async void VerifyAccess(string userId)
         {
             PermissionResponse rep = new PermissionResponse();

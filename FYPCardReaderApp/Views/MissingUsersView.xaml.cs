@@ -52,9 +52,15 @@ namespace FYPCardReaderApp.Views
             foreach (var id in userIds)
             {
                 var person = missingPersons.FirstOrDefault(p => p.Id == id && !p.LocationIsPrimary);
-                if (person != null)
+                var personPrimary = missingPersons.FirstOrDefault(p => p.Id == id && p.LocationIsPrimary);
+
+                if (person != null) //If a secondary was found, we always want to use that over the primary location
                 {
                     sortedList.Add(person);
+                }
+                else if(person == null && personPrimary != null)
+                {
+                    sortedList.Add(personPrimary);
                 }
             }
 
