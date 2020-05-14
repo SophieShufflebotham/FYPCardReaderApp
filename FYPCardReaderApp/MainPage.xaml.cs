@@ -28,7 +28,7 @@ namespace FYPCardReaderApp
 
             if(App.LOCATION_ID == 0)
             {
-                await DisplayAlert("Alert", "A location must first be configured", "OK");
+                await DisplayAlert("No location set", "A location must first be configured", "OK");
                 ChangeLocation(null, null);
             }
 

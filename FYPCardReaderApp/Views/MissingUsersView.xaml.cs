@@ -22,7 +22,8 @@ namespace FYPCardReaderApp.Views
             InitializeComponent();
             service = new RestService();
             Person[] MissingPersons = service.GetMissingUsers().Result;
-            PersonList = new ObservableCollection<Person>(MissingPersons);
+            List<Person> MissingPersonsList = ValidatePersonArray(MissingPersons);
+            PersonList = new ObservableCollection<Person>(MissingPersonsList);
 
             BindingContext = this;
         }
@@ -33,15 +34,31 @@ namespace FYPCardReaderApp.Views
             Person selectedPerson = PersonList[index];
             IndividualUserResponse resp = new IndividualUserResponse();
             resp.UserId = selectedPerson.Id;
-            var result = await DisplayAlert("Alert", $"Mark {selectedPerson.Forename} {selectedPerson.Surname} as safe?", "Yes", "No");
+            var result = await DisplayAlert("Confirm", $"Mark {selectedPerson.Forename} {selectedPerson.Surname} as safe?", "Yes", "No");
 
             if(result == true)
             {
                 service.PostUserIsSafe(resp);
                 PersonList.RemoveAt(index);
             }
+        }
 
+        public List<Person> ValidatePersonArray(Person [] missingPersons)
+        {
+            List<Person> sortedList = new List<Person>();
 
+            var userIds = missingPersons.Select(person => person.Id).Distinct().ToList();
+
+            foreach (var id in userIds)
+            {
+                var person = missingPersons.FirstOrDefault(p => p.Id == id && !p.LocationIsPrimary);
+                if (person != null)
+                {
+                    sortedList.Add(person);
+                }
+            }
+
+            return sortedList;
         }
     }
 }

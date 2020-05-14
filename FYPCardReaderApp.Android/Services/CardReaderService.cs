@@ -51,9 +51,9 @@ namespace FYPCardReaderApp.Droid.Services
                 {
                     byte[] result = isoDep.Transceive(command);
 
-                    // If AID is successfully selected, 0x9000 is returned as the status word (last 2
-                    // bytes of the result) by convention. Everything before the status word is
-                    // optional payload, which is used here to hold the account number.
+                    // If the AID is successfully found, 0x9000 is returned from the device as the status word (last 2
+                    // bytes of the result) (0x9000 is the OK Status Word - this is returned if the phone is authorised and the scan was successful). Everything before the status word is
+                    // optional payload, which this project uses to store the userID
                     int resultLength = result.Length;
                     byte[] statusWord = { result[resultLength - 2], result[resultLength - 1] };
                     byte[] payload = new byte[resultLength - 2];
@@ -68,7 +68,7 @@ namespace FYPCardReaderApp.Droid.Services
                     }
                     if (arrayEquals)
                     {
-                        // The remote NFC device will immediately respond with its stored account number
+                        // The remote NFC device will respond with the userId as a payload
                         string payloadString = System.Text.Encoding.UTF8.GetString(payload);
                         Console.WriteLine($"Recieved Payload: {payloadString}");
                         OnPayloadReceived(payloadString);
